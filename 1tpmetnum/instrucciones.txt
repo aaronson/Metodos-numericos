@@ -1,0 +1,32 @@
+Los programas fueron codeados y ejecutados en el sistema operativo Linux. Fue testeado en OpenSUSE 11.4, Ubuntu 10.10 y el Debian instalado en los laboratorios del DC. El compilador usado es G++, sin opciones de compilador
+
+Para ejecutar el programa que calcula la funcion usando double:
+
+-Abrir el directorio mclaurin
+-Ejecutar make
+-Lanzar el programa con la instrucción ./main [NUMERO A CALCULAR] [CANTIDAD DE TERMINOS DESEADOS]
+
+El programa devuelve por consola los siguientes resultados separados por comas:
+[NUMERO EVALUADO],[CANTIDAD DE TERMINOS USADOS],[RESULTADO DE LA FUNCION],[RESULTADO DE COS(X)]
+
+Se puede usar cualquiera de los script provistos, para eso se ejecutan con:
+
+./iteraterms.sh [NUMERO A CALCULAR]
+./entryterms.sh [CANTIDAD DE TERMINOS DESEADOS]
+
+
+Para ejecutar el programa que calcula la funcion con mantisa variable
+
+-Abrir el directorio mantisa
+-Ejecutar make
+-Lanzar el programa con la instrucción ./main [NUMERO A CALCULAR] [CANTIDAD DE TERMINOS DESEADOS] [TAMAÑO MANTISA DESEADA]
+
+El programa devuelve por consola los siguientes resultados separados por comas:
+[NUMERO EVALUADO],[CANTIDAD DE TERMINOS USADOS],[TAMAÑO DE MANTISA USADO],[RESULTADO DE LA FUNCION],[RESULTADO DE COS(X)]
+
+Se puede usar cualquiera de los scripts provistos, para eso se ejecutan con:
+
+./mantiter.sh [NUMERO A CALCULAR] [CANTIDAD DE TERMINOS DESEADOS]
+./termiter.sh [NUMERO A CALCULAR] [TAMAÑO MANTISA DESEADA]
+./xiter.sh [CANTIDAD DE TERMINOS DESEADOS] [TAMAÑO MANTISA DESEADA]
+

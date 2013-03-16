@@ -1,0 +1,16 @@
+\section{Discusión}
+
+Se puede observar en los gráficos 1.1 y 1.2 cómo una cantidad mayor de términos en la serie significa una mejor aproximación de $cos(x)$, eso significa que cuando aumenta el $n$ la aproximación es mucho mejor, ya con 5 términos el error absoluto está en el orden de $10^{-3}$ para $x < \pi$ y se hace exponencialmente más pequeño a medida que se aumentan los términos.
+
+De la misma manera, en el gráfico 1.3, se puede observar el comportamiento de la función con una cantidad de términos que consideramos suficientemente preciso, podemos ver que mientras cerca del 0 las funciones son idénticas, existe un punto de quiebre desde donde la función aproximación empieza a alejarse cada vez más de la función coseno, es más, $f(x)$ toma valores $<$ -1, lo que es imposible en una función coseno. Analizando más profundamente, ese punto de quiebre se produce entre el 8 y el 8.5, este es el valor para el cual $x^{2i} > 2i!$ para i = 10, por lo tanto, la función empieza a diverger en ese punto. Obviamente, cuanto más grande sea el $n$, este punto se hallará más lejos del 0, pero al ser finito, irremediablemente existirá, por lo tanto, la aproximación se separará de la función coseno tarde o temprano.
+
+En cuanto a cómo afecta el tamaño de la mantisa al error obtenido en el cálculo, la primera conclusión que obtenemos es que, si bien una mantisa muy chica obviamente causa un error, en los gráficos 4.1, 4.2 y 4.3 podemos ver que variar la mantisa más alla de un espectro (en este caso, alrededor de los 10 bits) no produce ningún cambio visible en el resultado obtenido, por lo tanto, el error que se produce al limitar la mantisa es en comparación menor que el que se produce al acotar la cantidad de términos o al alejarse mucho del 0 como entrada de la función. El comportamiento que por momentos parece casi aleatorio del error cuando se usan 2 bits de mantisa lo podemos atribuir al redondeo que está haciendo, puede ser que por redondear mucho se termine disminuyendo un error en vez de arrastrarlo, si bien sabemos que 2 bits de mantisa nunca serían usados seriamente, nos pareció que su comportamiento era interesante para el análisis.
+
+
+Finalmente analizamos la relación entre el error teórico con el empírico.
+Cabe decir que cuando tuvimos la matriz de datos obtenidos y de errores teóricos, hicimos la resta para ver en qué
+valores era mayor el teórico que el empírico. La respuesta fue que en casi todos, salvo algunos casos particulares; en
+general con $x$ grande y $n$ chico. Fue por esto que decidimos graficar este caso particular donde la cota del error
+teórica queda por debajo del error empírico.
+
+Igualmente, cabe notar que la comparación de errores teórico y práctico la estamos haciendo calculando el error teórico mediante un script, eso invariablemente trae aparejado los mismos errores que tenemos al aproximar el coseno (redondeo, etc), por lo tanto, siempre la comparación que hagamos no va a ser la perfecta.

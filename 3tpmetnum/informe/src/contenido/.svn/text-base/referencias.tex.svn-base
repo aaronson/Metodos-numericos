@@ -1,0 +1,10 @@
+\section{Referencias}
+\label{referencias}
+
+\begin{itemize}
+\item Generador de números aleatorios\\
+\url{http://www.random.org/integers/?num=30&min=50&max=200&col=30&base=10&format=html&rnd=new}
+
+\item \underline{Análisis Numérico}  de \textit{Richard L. Burden y J. Douglas Faires}
+
+\end{itemize}

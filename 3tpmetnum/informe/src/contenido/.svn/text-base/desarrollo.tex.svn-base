@@ -1,0 +1,129 @@
+\section{Desarrollo}
+
+\subsection{Cálculo de los splines}
+
+\hspace*{0.45cm} Visto que la escena que capturamos es bidimensional, el spline que realizamos
+tuvimos que parametrizarlo por longitud de arco y muestrearlo en una cantidad determinada de puntos que indican la posicion del actor en la escena.
+
+Para lograr esto, primero fue necesario determinar una parametrizacion de los puntos, esto nos va a determinar dado el muestreo pasado por parámetro, que valor se va a asignar a cada punto de manera tal de construirnos la función $s$ que dado un $t$ nos devuelva el punto $(x,y)$ que corresponda a la parametrización.
+
+Se pidió tener en cuentra tres maneras diferentes de parametrizar la entrada, éstas son: 
+
+\begin{itemize}
+\item \underline{Uniforme:} la variación del parámetro es igual entre cualquier par de puntos de
+control consecutivos;
+\item \underline{Chord-length:} la variación del parámetro entre dos puntos de control consecutivos
+es proporcional a la
+distancia entre los mismos;
+\item \underline{Centrípeta:} la variación del parámetro es proporcional a la raíz cuadrada de la
+distancia entre los puntos de
+control
+\end{itemize}
+
+Por lo tanto, es necesario que al iniciar el programa, al cargar todos los datos, obtengamos el vector $t$ que le asigne a cada punto de muestreo su parámetro. Esto lo hacemos iterando simplemente desde 0 a la cantidad de puntos para la uniforme, tomando un punto y el anterior y calculando la disancia como la raíz cuadrada de la suma de los cuadrados para chord-length, y usando esa misma función pero tomando la raíz cuadrada nuevamente para la centrípeta.
+
+Habiendo obtenido la parametrización, podemos proceder a calcular los splines en $x$ e $y$. Visto y considerando que los splines son varias funciones que cumplen que su grado es menor o igual a tres, podemos escribir cada spline como varias $S$ tal que:
+
+\begin{equation}
+ S_i(x) = d_i(x - x_0)^3 + c_i(x - x_0)^2 + b_i(x - x_0) + a_i
+\end{equation}
+
+donde cada $S_i$ cumplen que:
+
+\begin{equation}
+ S_i(x_i) = y_i \forall 0 \leq k \leq n-1
+ \end{equation}
+\begin{equation} 
+ S_i(x_{i+1}) = y_{i+1} \forall 0 \leq k \leq n-1
+ \end{equation}
+ \begin{equation}
+ S_i'(x_{i+1}) = S_{i+1}'(x_{i+1}) \forall 0 \leq k \leq n-2
+ \end{equation}
+ \begin{equation}
+ S_i''(x_{i+1}) = S_{i+1}''(x_{i+1}) \forall 0 \leq k \leq n-2
+\end{equation}
+
+y como usamos splines naturales, se agrega la condición de que
+\begin{equation}
+ S_0''(x_0) = 0 = S_{n-1}''(x_n)
+\end{equation}
+
+
+Cada spline se calcula de manera independiente, ya que $x$ e $y$ son independientes, por lo tanto en cada polinomio tenemos 4 incógnitas, y por lo tanto existen $4n$ incógnitas en total por spline, donde $n$ es la cantidad de polinomios (o sea, cantidad de puntos -1) 
+
+Sabiendo que existen varias restricciones para el spline, podemos plantear un sistema $Ax=b$ para
+hallar los coeficientes de las ecuaciones cúbicas, tal como se plantea en el libro citado en la
+sección \ref{referencias}
+
+La resolución de este sistema de ecuaciones lo hacemos mediante la técnica de eliminación gaussiana
+ya que nos permitió reutilizar codigo ya implementado el segundo trabajo práctico, para enfocarnos más
+profundamente en la interpolación sin preocuparnos por como resolver un sistema clásico de $Ax=b$
+
+%Por otra parte, en el libro citado en la sección \ref{referencias}, vimos una forma de solucionar
+%el sistema aprovechando que la matriz $A$ es tridiagonal. 
+
+Una vez hallados los coeficientes de cada ecuación cúbica, podemos formar los dos splines, estos los combinamos en una sola clase a la que llamamos Curva. Esta clase es la que nos va a permitir calcular el valor de un parámetro y obtener el punto que lo representa.
+
+
+\subsection{Integración para hallar los puntos delta}
+
+\hspace*{0.5cm}Habiendo obtenido los dos splines, tenemos que encontrar los puntos tal que la distancia sobre la curva de cada uno de ellos sea igual a un parámetro $\Delta$. Una primera aproximación podría ser simplemente suponer que al hacer $S(\Delta)$ obtendremos puntos que estén a distancia $\Delta$, por lo tanto, una vez calculado el spline, procedemos a calcular sucesivos $\Delta * i$ hasta llegar al final del spline.
+
+En la función para evaluar, simplemente llamamos a cada spline dentro de la curva; en cada uno iteramos sobre los $t$ hasta encontrar en qué ecuación se encuentra el parámetro, una vez hallada la ecuación, resolvemos la ecuación $(1)$ usando los datos que corresponden.
+
+Luego de obtener este muestreo de puntos sobre los $\Delta * i$, pensamos que podríamos obtener mejores resultados si integráramos sobre la curva para realmente observar una distancia $\Delta$ recorrida por el spline.
+
+Para esto, vamos a elegir una forma de integrar usando búsqueda binaria. Para encontrar los puntos, vamos a iterar hasta que ya no podamos seguir más porque se llega a $t_n$. En cada iteración vamos a tomar el parámetro anterior encontrado (empezando en 0) y vamos a obtener el siguiente de esta manera:
+
+\begin{itemize}
+\item Si el parámetro anterior (en adelante, $ant$) es menor a $\frac{t_n}{2}$, se inicia la búsqueda con el parámetro que estamos buscando (en adelante, $b$) en $\frac{t_n}{2}$.
+\item Si $ant$ es mayor a $\frac{t_n}{2}$, se inicia la búsqueda con $b$ en $\frac{t_n}{2} + a$.
+\item Una vez inicializado $b$ inicializamos el incremento ($half$) en $b-ant$.
+\item Integramos por primera vez (ver más adelante).
+\item Comparamos el resultado con $\Delta$. Si nos pasamos del dominio de la spline, devolvemos 0. Si está dentro del margen de error aceptado, concluimos la función y devolvemos ese mismo resultado, sino, decrementamos $half$ a la mitad y observamos si es mayor o menor.
+\item Si es mayor, decrementamos $b$ en $half$, si es menor, lo aumentamos en $half$.
+
+\end{itemize}
+
+
+En cada iteración, hacemos una integración con Simpson compuesto, tal como la especifica el Burden. Nosotros estamos intentando integrar la ecuación 
+
+\begin{equation}
+  \Delta = \int_{s_a}^{s_b} \sqrt { [x'(s)]^2 + [y'(s)]^2 }\, ds
+\end{equation}
+
+Donde todos son datos excepto por $s_b$, que es lo que queremos averiguar
+
+Para esto, fijamos un punto medio entre $a$ (el que fue pasado como $ant$) y $b$. Resolvemos $\sqrt { [x'(s)]^2 + [y'(s)]^2 }$ para $a$ y $b$ y lo almacenamos en $x_0$, inicializamos los iteradores $x_1$ y $x_2$ y luego iteramos una cantidad fija par de veces (esta cantidad se puede elegir dado que es un $define$) y calculamos sucesivas veces la función a integrar en $x = a + i * h$, donde $h = h = (b - a) / n$. Habiendo hecho esto, se incrementa $x_1$ en dicho resultado si es una iteración par y  $x_2$ si es impar.
+
+Una vez terminada la iteración, se hace un promedio ponderado entre $x_0$, $x_1$ y $x_2$, tomando 4 veces $x_2$, 2 $x_1$ y una $x_0$, para luego multiplicarlo por $h$.
+
+Con este resultado, tenemos el resultado de la integración entre el $a$ y $b$ que fue pasado a Simpson. Sabiendo cuánto dista del $\Delta$ al que nos queremos acercar, hacemos la búsqueda binaria aumentando o reduciendo según corresponda, hasta que nos encontremos en un entorno suficientemente cercano de $\Delta$, este entorno está definido por la constante ERROR que se puede modificar en la compilación. 
+
+Luego, se obtiene el $b$ que hace que la integración de en un entorno acotado de $\Delta$; podemos agregarlo al vector que contiene los $t_{\Delta_i}$, o sea, los puntos que están a una distancia $\Delta$ sobre la curva, que es lo pedido.
+
+Una vez que tenemos todo calculado, podemos además obtener las derivadas de los puntos, tanto los $\Delta * i$ como los $t_{\Delta_i}$, para esto llamamos a la función derivar que hace el cálculo 
+
+\begin{equation}
+ S_i(x) = 3 * d_i(x - x_0)^2 + 2 * c_i(x - x_0) + b_i
+\end{equation}
+
+Devolviendo así todos los datos que queríamos obtener
+
+%Dada una curva cualquiera $(x(s),y(s)) \in \real^2$ definida en función de un parámetro $s \in
+%\real$, la longitud de la curva entre 2 puntos cualesquiera $a$ y $b$ de la misma viene dada por
+%\begin{equation}
+%  L = \int_{s_a}^{s_b} \sqrt { [x'(s)]^2 + [y'(s)]^2 }\, ds,
+%\end{equation}
+%donde $s_a$ y $s_b$ son respectivamente los valores del parámetro $s$ en los puntos $a$ y $b$.
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,315 @@
+\section{Apéndices}
+
+\subsection{Apéndice A}
+
+\textbf{Introducción}
+
+El grupo de desarrollo de aplicaciones de métodos numéricos (GDAMN) ha sido convocado por un
+importante estudio de animación de Hollywood para colaborar en su próxima película que promete ser
+un éxito de taquilla. El problema planteado es el siguiente. El personaje principal de la nueva
+película será caracterizado por una animación cuyos movimientos serán generados por captura de
+movimiento (\textit{Motion capture}) de un actor real. Las trayectorias del personaje en las escenas
+de la película serán determinadas por el departamento de animación del estudio. Estás trayectorias
+se definen por medio de una serie de puntos por los que pasará el personaje los cuales son
+``unidos'' por medio de una spline cúbica. Para que el resultado de la animación resulte visualmente
+real debe haber una compatibilidad entre los movimientos del personaje obtenidos de la captura de
+movimiento y la velocidad de desplazamiento del mismo sobre las curvas definidas por las splines.
+Por ejemplo, la velocidad con que se mueven los pies al caminar deberán corresponderse con la
+velocidad de desplazamiento del personaje en la escena.
+
+\noindent\textbf{Enunciado}
+
+En este trabajo práctico nos concentraremos en una simplificación del problema planteado en la
+introducción. En este caso, utilizaremos una escena bidimensional, por ejemplo una toma aérea, y
+estudiaremos el caso donde el personaje se desplaza a velocidad constante. Para esto, la spline
+deberá ser parametrizada por longitud de arco y muestreada en una cantidad determinada de puntos que
+representarán la posición del personaje en cada cuadro de la escena.
+
+Dada una curva cualquiera $(x(s),y(s)) \in \mathbb{R}^2$ definida en función de un parámetro $s \in
+\mathbb{R}$, la longitud de la curva entre 2 puntos cualesquiera $a$ y $b$ de la misma viene dada
+por
+\begin{equation*}
+  L = \int_{s_a}^{s_b} \sqrt { [x'(s)]^2 + [y'(s)]^2 }\, ds,
+\end{equation*}
+donde $s_a$ y $s_b$ son respectivamente los valores del parámetro $s$ en los puntos $a$ y $b$.
+Una parametrización por longitud de arco será aquella para la cual la longitud de curva entre dos
+puntos sea igual a la diferencia de los valores del parámetro para cualquier par de puntos ($L = s_b
+- s_a$). Esto sucede cuando $\sqrt { [x'(s)]^2 + [y'(s)]^2 } = 1$ en todo punto de la curva. 
+
+Entonces, dada una parametrización cualquiera $(x(s),y(s)) \in \mathbb{R}^2, \; s \in \mathbb{R}$,
+reparametrizar la curva por longitud de arco implica encontrar otra parametrización en función de un
+segundo parámetro $t \in \mathbb{R}$ tal que $(x(s(t)),y(s(t))) \in \mathbb{R}^2$ y $\sqrt {
+[x'(t)]^2 + [y'(t)]^2 } = 1$. Normalmente, la dependencia funcional entre los dos parámetros $s =
+s(t)$ no resulta sencilla de ser encontrada explícitamente y es necesario recurrir a una
+aproximación numérica.
+
+En este trabajo pr\'actico se deber\'an dise\~nar algoritmos e implementar un programa que, dadas
+las coordenadas $(\bar{x}_i,\bar{y}_i) \in \mathbb{R}^2$ de una serie de puntos de control ($i =
+1..n$), construya una spline natural param\'etrica que pase por los puntos en el orden dado. A
+partir de la parametrización original, se deberá reportar una serie de puntos sobre la curva que se
+corresponda con un muestreo uniforme sobre la curva reparametrizada por longitud de arco. Además, en
+cada punto muestreado se reportará el vector tangente a la curva $(x'(s),y'(s))$ de manera de
+conocer la orientación que debe tener el personaje.
+
+Dadas las coordenadas de los puntos de control existen varias estrategias para definir la
+parametrizaci\'on original. Algunas de las parametrizaciones com\'unmente utilizadas son:
+
+\begin{description}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+ \item[Uniforme:] la variaci\'on del par\'ametro es igual entre cualquier par de puntos de control
+consecutivos;
+ \item[Chord-length:] la variaci\'on del par\'ametro entre dos puntos de control consecutivos
+es proporcional a la distancia entre los mismos;
+ \item[Centr\'ipeta:] la variaci\'on del par\'ametro es proporcional a la ra\'iz cuadrada de la
+distancia entre los puntos de control\footnote{Este m\'etodo fue propuesto por Eugene Lee en
+\textit{Choosing nodes in parametric curve interpolation}, Computer-Aided Design 21, 1989.}.
+\end{description}
+
+En este trabajo pr\'actico deber\'an utilizar estas parametrizaciones y comparar los resultados
+obtenidos con las tres variantes.
+
+\textbf{Preguntas:}
+
+\begin{enumerate}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+ \item >Depende la forma de la curva de la elecci\'on de la parametrizaci\'on original? 
+ \item (Opcional) >C\'omo cambia la forma de la curva seg\'un la condici\'on de borde usada
+(natural, sujeto, \textit{not-a-knot}, etc.)? 
+ \item (Opcional) Si el intervalo del par\'ametro se muestrea uniformemente en la parametrización
+original, >los puntos resultantes quedan espaciados uniformemente? >Qu\'e otras alternativas de
+muestreo ser\'ian apropiadas? 
+\end{enumerate}
+
+\textbf{Archivos de entrada / salida}
+
+La entrada de datos se realizar\'a mediante un archivo de texto con el siguiente formato:
+
+\begin{itemize}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+\item En la primera l\'inea figurar\'a el n\'umero $n$ de puntos de control utilizados para definir
+la spline y, separado por espacio, 
+la distancia en el parámetro entre puntos sucesivos de muestreo, es decir $(s_{i+1} - s_{i})$.
+\item En las siguientes $n$ l\'ineas figurar\'an las coordenadas $\bar{x}$ e $\bar{y}$ de cada punto
+de control separadas por espacio.
+\end{itemize}
+
+La salida de datos estar\'a dada por un archivo de texto con el siguiente formato:
+
+\begin{itemize}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+\item En la primera l\'inea figurar\'a la distancia en el parámetro entre puntos sucesivos de
+muestreo, es decir $(s_{i+1} - s_{i})$.
+\item Una l\'inea en blanco.
+\item En la siguiente línea, el n\'umero $m$ de puntos muestreados con la parametrización original,
+\item En las siguientes $m$ l\'ineas figurar\'an las coordenadas $x$ e $y$ y las componentes del
+vector tangente $x'(s)$ e $y'(s)$ de la spline original en cada punto muestreado, separadas por
+espacio. Estos puntos corresponder\'an a un muestreo uniforme del rango del par\'ametro e
+incluir\'an el extremo inicial. De esta forma, probablemente este conjunto de puntos no incluya los
+puntos de control originales salvo el inicial.
+\item Una l\'inea en blanco.
+\item En la siguiente línea, el n\'umero $q$ de puntos muestreados con la reparametrización (en
+general $q$ y $m$ serán distintos).
+\item En las siguientes $q$ l\'ineas figurar\'an las coordenadas $x$ e $y$ y las componentes del
+vector tangente $x'(s)$ e $y'(s)$ de la spline reparametrizada en cada punto muestreado, separadas
+por espacio. Estos puntos corresponder\'an a un muestreo uniforme del rango del par\'ametro (por
+longitud de arco) e incluir\'an el extremo inicial.
+\end{itemize}
+
+
+\subsection{Apéndice B}
+
+\subsubsection{Cálculo de la parametrización}
+
+Al principio nuestro algoritmo realiza la cuenta necesaria para poder calcular las distancias de acuerdo a la que sea necesaria.
+En el este caso mostramos el código del uniforme.
+
+\begin{verbatim}
+void do_uniforme() {
+    for (int i = 0; i < cant_puntos; i++) {
+        t.push_back(i);
+    }
+    Spline sx(x);
+    Spline sy(y);
+    Curva s(sx, sy);
+
+    t_distancias();
+
+    vp par_orig = s.resolver_param_original();
+    s.imprimir_puntos(par_orig);
+    vd sol = s.resolver_spline();
+
+    s.imprimir_vector(sol);
+
+}
+\end{verbatim}
+
+Para el caso de centripeta realizamos la siguiente implementacion:
+
+\begin{verbatim}
+void do_centripeta() {
+    t.push_back(0);
+    double acum = 0;
+    for (int i = 1; i < cant_puntos; i++) {
+        acum += sqrt(calc_distancia(i));
+        t.push_back(acum);
+    }
+    Spline sx(x);
+    Spline sy(y);
+    Curva s(sx, sy);
+
+    t_distancias();
+
+    vp par_orig = s.resolver_param_original();
+    s.imprimir_puntos(par_orig);
+    vd sol = s.resolver_spline();
+
+    s.imprimir_vector(sol);
+
+}
+\end{verbatim}
+
+Y por ultimo el caso de chord length:
+
+\begin{verbatim}
+void do_chordlength() {
+    t.push_back(0);
+    double acum = 0;
+    for (int i = 1; i < cant_puntos; i++) {
+        acum += calc_distancia(i);
+        t.push_back(acum);
+    }
+    Spline sx(x);
+    Spline sy(y);
+    Curva s(sx, sy);
+
+    t_distancias();
+
+    vp par_orig = s.resolver_param_original();
+    s.imprimir_puntos(par_orig);
+    vd sol = s.resolver_spline();
+
+    s.imprimir_vector(sol);
+
+}
+\end{verbatim}
+
+\subsubsection{Resolucion del sistema $Ax=b$}
+
+Se resuelve mediante dos metodos por un lado la funcion de gauss que ejecuta la eliminación gaussiana y por otro lado el resolver triangulado que obtiene los valores una vez hecho gauss
+
+\begin{verbatim}
+void gauss(vvd &mat, vd &v) {
+    double factor;
+    int tam = mat.size();
+    for (int i = 0; i < tam - 1; i++) {
+        for (int k = i + 1; k < tam; k++) {
+            if (fabs(mat[k][i]) > 0.00001f) {
+                factor = mat[k][i] / mat[i][i];
+                for (int j = 0; j < tam; j++) {
+                    mat[k][j] -= mat[i][j] * factor;
+                }
+                v[k] -= v[i] * factor;
+            }
+        }
+    }
+
+
+vd resolver_triangulado(vvd mat, vd v) {
+    int tam = v.size();
+    vd res(tam, 0);
+    res[tam - 1] = v[tam - 1];
+    for (int i = tam - 2; i >= 0; i--) {
+        double acum = 0;
+        for (int j = tam - 1; j > i; j--) {
+            acum += mat[i][j] * res[j];
+        }
+        acum -= v[i];
+        res[i] = acum / (-mat[i][i]);
+    }
+    return res;
+}
+
+
+\end{verbatim}
+
+\subsubsection{Resolucion del Spline y aproximacion con Binary Search}
+
+En esta sección pasamos a mostrar el código que utilizamos para resolver la integral deseada y aproximar el valor del delta
+al valor que mas se le asemeja mediante una busqueda binaria
+
+\begin{verbatim}
+
+
+vd Curva::resolver_spline() {
+    vd vsol;
+    double sig = 0;
+    vsol.push_back(sig);
+    while (sig < t[cant_puntos - 1]) {
+        sig = aproximar_con_bb(sig);
+        if (sig == 0)
+            break;
+        vsol.push_back(sig);
+    }
+    return vsol;
+}
+
+double Curva::aproximar_con_bb(double ant) {
+    double b;
+    if (t[cant_puntos - 1] / 2 < ant) {
+        b = t[cant_puntos - 1];
+    } else {
+        b = t[cant_puntos - 1] / 2 + ant;
+    }
+    double half = (b - ant);
+    double res = simpson_compuesto(ant, b);
+    if (b == t[cant_puntos - 1] && (res < delta))
+        return 0;
+    while (fabs(res - delta) > ERROR) {
+        half /= 2;
+        if (res > delta) {
+            b -= half;
+        } else {
+            b += half;
+        }
+        res = simpson_compuesto(ant, b);
+    }
+    return b;
+}
+
+
+double Curva::simpson_compuesto(double a, double b) {
+    int n = CANT_SIMPSON;
+    double h = (b - a) / n; // toma el punto intermedio
+    double x0 = funcion_a_integrar(a) + funcion_a_integrar(b);
+    double x1 = 0;
+    double x2 = 0;
+
+    for (int i = 1; i < (int) (n); i++) {
+        double x = a + i * h;
+        if ((i % 2) == 0) {
+            x2 += funcion_a_integrar(x);
+        } else {
+            x1 += funcion_a_integrar(x);
+        }
+    }
+
+    x1 = h * (x0 + (2 * x2) + (4 * x1)) / 3;
+    return x1;
+}
+
+
+
+\end{verbatim}
+
+
+
+
+\label{sec:apendice}

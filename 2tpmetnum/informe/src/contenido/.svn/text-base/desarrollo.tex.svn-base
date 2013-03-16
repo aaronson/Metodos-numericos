@@ -1,0 +1,172 @@
+\section{Desarrollo}
+
+\subsection{Modelo del problema}
+
+Inicialmente tratamos de calcular la temperatura de cada parte del horno utilizando un modelado. El
+mismo se basa en dar una ecuación por cada interseccion entre radios y circulos alrededor del
+centro del horno.
+
+Al inciar a pensar este problema, analizamos el funcionamiento del horno y la formula:
+
+\begin{equation*}
+\frac{\partial^2 T(r,\theta)}{\partial r^2} + \frac{1}{r}
+\frac{\partial T(r,\theta)}{\partial r} + \frac{1}{r^2}
+\frac{\partial^2 T(r,\theta)}{\partial \theta^2} \ =\ 0 
+\end{equation*}
+
+Donde podemos aproximar cada termino usando estas otras formulas:
+
+\begin{eqnarray}
+\frac{\partial^2 T(r,\theta)}{\partial r^2}(r_j,\theta_k) & \cong & \frac{t_{j-1,k} - 2t_{jk} + t_{j+1,k}}{(\Delta r)^2} \nonumber \\[4pt]
+\frac{\partial T(r,\theta)}{\partial r}(r_j,\theta_k) & \cong & \frac{t_{jk} - t_{j-1,k}}{\Delta r} \nonumber \\[4pt]
+\frac{\partial^2 T(r,\theta)}{\partial \theta^2}(r_j,\theta_k) & \cong & \frac{t_{j,k-1} - 2t_{jk} + t_{j,k+1}}{(\Delta\theta)^2} \nonumber
+\end{eqnarray}
+
+Luego la primer formula quedaria como
+
+\begin{eqnarray*}
+\frac{t_{j-1,k} - 2t_{jk} + t_{j+1,k}}{(\Delta r)^2} + \frac{1}{r} \frac{t_{jk} - t_{j-1,k}}{\Delta r} + \frac{1}{r^2} \frac{t_{j,k-1} - 2t_{jk} + t_{j,k+1}}{(\Delta\theta)^2} & \cong & 0
+\end{eqnarray*}
+
+
+Ahora para analizar el funcionamiento de esta ecuación decidimos tomar un caso particular de un horno que tiene 3 radios y 3 circulos, para simplificar el análisis del problema. Las intersecciones del circulo más pegado al centro con los radios conocemos su valor, 1500 grados y las del círculo más alejado del centro lo sabemos porque son dato de entrada. En este ejemplo vamos a decir que tenemos los puntos $a,b,c$ ; $x,y,z$ ; $o,p,q$. donde $a$, $x$ y $o$ son los puntos donde se corta cada radio con el círculo mís interno al centro del horno y $c$, $z$, $q$ son los puntos que corresponden al círculo mas alejado del centro del horno.
+
+\noindent Luego:\\
+$t_q = 100$\\
+$t_z = 50$\\
+$t_c = 150$\\
+$t_x,t_a,t_o = 1500$\\
+
+Para hallar $t_b$: $t_b = t_{j,k}$
+
+\begin{eqnarray}
+\frac{t_a-2t_b+t_c}{(\Delta r)^2} + \frac{1}{r} \frac{t_b-t_a}{\Delta r} +
+\frac{1}{r^2} \frac{t_y-2t_b+t_p}{(\Delta\theta)^2} & \cong & 0 \label{1}
+\end{eqnarray}
+
+$t_y$:$t_y = t_{j,k}$
+
+\begin{eqnarray}
+\frac{t_x-2t_y+t_z}{(\Delta r)^2} + \frac{1}{r} \frac{t_y-t_x}{\Delta r} + \frac{1}{r^2} \frac{t_p-2t_y+t_b}{(\Delta\theta)^2} & \cong & 0
+\end{eqnarray}
+
+$t_p$:$t_p = t_{j,k}$
+
+\begin{eqnarray}
+\frac{t_o-2t_p+t_q}{(\Delta r)^2} + \frac{1}{r} \frac{t_p-t_o}{\Delta r} + \frac{1}{r^2} \frac{t_b-2t_p+t_y}{(\Delta\theta)^2} & \cong & 0
+\end{eqnarray}
+
+reemplazando $t_q$, $t_z$, $t_c$, $t_x$, $t_a$, $t_o$ por los valores que dimos anteriormente en la formula \ref{1}%, \ref{2} y \ref{3}
+
+\begin{eqnarray*}
+\frac{1500-2t_b+150}{25} + \frac{1}{r} \frac{t_b-100}{\Delta r} + \frac{1}{r^2} \frac{t_y-2t_b+t_p}{(\frac{2}{3}\pi)^2} & \cong & 0
+\end{eqnarray*}
+
+%\begin{equation}
+%\displaystyle\frac{1500-2t_y+50}{25} + \frac{1}{z} \frac{t_y-t_x}{\Delta r} + \frac{1}{z^2} %\frac{t_p-2t_y+t_b}{(\Delta\theta)^2} \cong 0
+%\end{equation}
+
+%\begin{equation}
+%\displaystyle\frac{t_o-2t_p+t_q}{25} + \frac{1}{q} \frac{t_p-t_o}{p-o} + \frac{1}{q^2} %\frac{t_b-2t_p+t_y}{(b-p)^2} \cong 0
+%\end{equation}
+
+Lo que queda por hacer es ordenar estas ecuaciones para que nos quede una sumatoria con productos de una incógnita por datos de la siguiente manera.
+
+\begin{eqnarray*}
+\frac{t_a}{(\Delta r)^2} - \frac{t_a}{r(\Delta r)} - \frac{2t_b}{(\Delta r)^2} + \frac{t_b}{r(\Delta r)} - \frac{2t_b}{r^2(\Delta\theta)^2} + \frac{t_c}{(\Delta r)^2} + \frac{t_y}{r^2(\Delta\theta)^2} + \frac{t_p}{r^2(\Delta\theta)^2} & \cong & 0 \\
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\frac{r-\Delta r}{r((\Delta r)^2)} t_a + \frac{-2r^2(\Delta\theta)^2 + r(\Delta r)(\Delta\theta)^2-2(\Delta r)^2}{r^2(\Delta r)^2(\Delta\theta)^2} t_b + \frac{1}{(\Delta r)^2} t_c + \frac{1}{r^2(\Delta\theta)^2} t_y + \frac{1}{r^2(\Delta\theta)^2} t_p & \cong & 0
+\end{eqnarray*}
+
+Nótese que $t_a$ y $t_c$ son dato para nuestro caso particular pero no lo serán si tenemos más círculos en el horno y es una ecuación para algún punto en el medio del horno, es decir, no adyacente a algún borde.
+Entonces, tenemos una forma genérica de escribir una ecuación para un punto cualquiera del horno, instanciando los siguientes valores
+
+\begin{eqnarray*}
+t_b = t_{j,k} & \Rightarrow & t_a = t_{j-1,k}\\
+& & t_c = t_{j+1,k}\\
+& & t_y = t_{j,k-1}\\
+& & t_p = t_{j,k+1}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\frac{r-\Delta r}{r((\Delta r)^2)} t_{j-1,k} + \frac{-2r^2(\Delta\theta)^2 + r(\Delta r)(\Delta\theta)^2-2(\Delta r)^2}{r^2(\Delta r)^2(\Delta\theta)^2} t_{j,k} + \frac{1}{(\Delta r)^2} t_{j+1,k} + \frac{1}{r^2(\Delta\theta)^2} t_{j,k-1} + \frac{1}{r^2(\Delta\theta)^2} t_{j,k+1} & \cong & 0
+\end{eqnarray*}
+
+
+Por lo tanto, tenemos una forma de representar cada intersección por una ecuación con 5 incógnitas. Ahora que tenemos dichas ecuaciones podemos crearnos un sistema de ecuaciones lineales $Ax = b$ para un horno
+donde hay $n$ radios y $m$ circulos donde $A \in \mathbb{R}^{n*mxn*m}$ es una matriz que
+representa los datos que estan asociados a cada incognita. El vector $x \in \mathbb{R}^{n*m}$ es
+el vector de incógnitas y el vector $b\in \mathbb{R}^{n*m}$ representa el valor de la temperatura en el caso de los puntos en lo que es conocida (bordes interior y exterior) y 0 en el caso en que es desconocida.
+
+\subsection{Inicialización del sistema de ecuaciones}
+
+
+Una vez obtenida la manera de encarar el problema, el primer paso fue lograr que nuestro programa inicializara la matriz de esta forma para poder proceder a resolverla. Para esto primero leemos la entrada desde un archivo de texto (se puede ingresar desde consola, pero es más rápido pasar un archivo de texto como entrada). Una vez hecho esto, calculamos cuántas ecuaciones tendrá la matriz, luego seteamos los datos que ya conocemos (las temperaturas de los bordes) en el vector $b$.
+
+Hecho esto, falta calcular los coeficientes para cada ecuación. Para esto, sabemos que cada ecuación identifica unívocamente a un punto, de la manera que disponemos la matriz, los puntos se ordernan desde el más exterior, en orden (según cómo entraron de parámetro) pasando por cada punto que tiene ese radio, luego los puntos que se ubican un radio más adentro, y así sucesivamente hasta terminar en los puntos del borde interior del horno. De esta manera, para obtener el índice en la matriz que le corresponde al punto, sabemos que si el punto tiene coordenadas $(x,y)$, con $x$ el número de radio al que pertenece e $y$ el número de ángulo, entonces ese punto tiene el índice $x*m+y$ con $m$ la cantidad de ángulos.
+
+Luego, basta aplicar las cuentas que resumimos anteriormente, para cada ecuación hay cinco coeficientes a setear: 
+
+\begin{eqnarray*}
+m_{j-1,k} & := & \frac{r-\Delta r}{r((\Delta r)^2)}\\
+m_{j,k} & := & \frac{-2r^2(\Delta\theta)^2 + r(\Delta r)(\Delta\theta)^2-2(\Delta r)^2}{r^2(\Delta r)^2(\Delta\theta)^2} \\
+m_{j+1,k} & := & \frac{1}{(\Delta r)^2} \\
+m_{j,k-1} & := & \frac{1}{r^2(\Delta\theta)^2} \\
+m_{j,k+1} & := & \frac{1}{r^2(\Delta\theta)^2}\\
+\end{eqnarray*}
+
+donde $\Delta\theta$ y $\Delta r$ son constantes puesto que todos los círculos y los ángulos son equidistantes, por lo que se pueden calcular al principio de la ejecución y usar como datos.
+
+Haciendo esto para cada ecuación nos queda una matriz bastante esparsa, donde las primeras $m$ filas y las últimas $m$ filas son como si fuera una matriz identidad y en las otras filas nunca hay más de 5 valores distintos de 0.
+
+\subsection{Triangulación de la matriz}
+
+
+Para resolver este sistema decidimos originalmente habíamos decidido utilizar factorización $QR$ para aprovechar la esparcidad de la matriz, es decir, hallar dos matrices $Q,R
+\in \mathbb{R}^{n*mxn*m}$ tal que $A = Q * R$ donde $Q$ es una matriz ortogonal y $R$ triangular
+superior. Se puede ver que $QRx = b$ se puede transcribir como $Rx =
+Q^{-1}b$ con lo cual con sólo encontrar la factorizacion $QR$ el problema estaría casi resuelto, ya que la inversa de $Q$ al ser ortogonal es $Q^t$.
+
+\\
+Para realizar la factorización habíamos decidido usar el método de Householder, ya que el método
+de Givens tenia la complejidad de utilizar funciones trigonometricas que suelen darnos valores con
+mucha cantidad de decimales. Al representar estas funciones en la computadora hubiéramos necesitado truncar o redondear estos decimales perdiendo precisión.
+
+Al tratar de codear el método de Householder encontramos muchos problemas ya que la implementación resultó muy compleja, y si bien llegamos a terminarlo y obtener una factorización, contrastando los resultados obtenidos contra Matlab evidenció que estos no eran correctos, y no nos fue posible encontrar en dónde radicaba el error. \footnote{Adjuntamos el código desarrollado en la carpeta entrega/src como \textit{QR(no anda).cpp}}
+
+Dado que no pudimos hacer la factorización con $QR$, decidimos resolver el sistema mediante eliminación gaussiana, ya que consideramos que la implementación sería mucho más sencilla y además siendo la matriz esparsa, no habría que realizar demasiadas eliminaciones ya que la mayor parte de los datos ya iban a estar seteados en 0 y no iba a ser necesario hacer tantas cuentas.
+
+La idea de este método es que por cada iteracion $i$ se complete la columna $i$-ésima con ceros desde la posicion $(i+1,i)$ hasta la posicion $(n*m,i)$. Al completar todas las iteraciones se obtiene una matriz triangulada.
+
+?`Como logramos esto? Lo realizamos de la siguente manera. Primero debemos asegurar que en la posicion $(i,i)$ no haya un cero para el paso $i$. El $(1,1)$ siempre vale $1$, por la manera de construir la matriz, asi que podemos empezar a ejecutar el algoritmo que funciona de la siguiente manera:
+
+\begin{enumerate}
+\item Obtenemos ceros debajo del $(1,1)$. Hacemos una resta de la fila (incluyendo el vector $b$) que queremos poner en cero con la fila $1$ multiplicada con $m_{i,1}/m_{1,1}$ para lograr el cero. Ver cuenta en Apendice B, sección 6.2.2
+\item Para todos los otros pasos debemos chequear que la posicion $(i,i)$ sea distinta de 0.
+\item Si es cero intercambiamos esa fila con la primera que esté abajo que no tiene 0 en esa columna (si no hay ninguna, la matriz no es inversible y por lo tanto, no se puede resolver el sistema) y luego seguimos al paso 4
+\item Si no es 0, repetimos la cuenta del paso 1 con la submatriz que se formo al colocar en 0 toda la primer columna menos el primer elemento, es decir, la matriz anterior sin contar las filas desde la primera hasta la $i$-esima ni la columna 1 hasta la$ $i-esima.
+\end{enumerate}
+
+Luego de realizar todos estos pasos la matriz inicial $M$ se transforma en una matriz $T$ donde T es triangular superior, debido a que el algoritmo se encargo de poner en 0 todos los valores de la matriz cuyos indices cumplen que $j < i$ donde $i$ es la fila y $j$ es la columna.
+
+\subsection{Resolución del sistema triangulado}
+
+Una vez triangulada la matriz, es fácil resolver el sistema mediante sustitución hacia atrás, para esto, obviamos las últimas $m$ filas (por la manera que está construida la matriz, las ecuaciones siempre quedan $1*x_i = 1500$), y calculamos el valor de $t_{n-m}$ restando los coeficientes de las posiciones mayores a $n-m$ multiplicado por el valor de la temperatura (en este caso, 1500) al valor de b${n-m}$. Esto nos da el valor de $t_{n-m}$, lo podemos setear en nuestro vector que contiene las temperaturas finales, y proceder hacia arriba, haremos el mismo proceso reemplazando con las temperaturas obtenidas hasta llegar hasta arriba.
+
+Una vez obtenido el vector con las temperaturas, debemos calcular en qué posición estimamos que la temperatura vale $400º$ para cada ángulo. Para hacer esto, pasamos el vector a una matriz de $\mathbb{R}^{n x m}$, donde cada columna representa las temperaturas correspondientes a un ángulo determinado a lo largo de los diferentes puntos. Por lo tanto, podemos estimar dónde se ubicaría el punto de $400º$ encontrando los dos valores más cercanos al mismo, uno que esté por encima y uno que esté por debajo. Al tener estos dos valores, sabemos por la ecuación del calor, que el punto con la temperatura deseada está en algún lugar entre esos dos.
+
+Para obtener ese punto, vamos a usar interpolación. Tal como lo dice la página que consultamos (seccion \ref{referencias}), para estimar el valor de una función desconocida teniendo dos valores de la misma uno por encima y uno por debajo, usamos la función 
+
+\begin{equation*}
+d_{400} = d_1 + \frac{400-t_1}{t_2 - t_1} * (d_2 - d_1)\\
+\end{equation*}
+
+donde $d_1$ y $t_1$ representan a la distancia y temperatura respectivamente del primer punto (que está más cercano al centro) y $d_2$ y $t_2$ a la distancia y temperatura del punto más cercano al exterior del horno.
+
+Con esta ecuación pudimos estimar el punto en el que la temperatura es $400º$ para ese ángulo, haciéndolo para todos los ángulos tenemos la isoterma.
+
+
+
+

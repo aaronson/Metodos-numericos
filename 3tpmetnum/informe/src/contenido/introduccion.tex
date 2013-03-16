@@ -1,0 +1,20 @@
+\section{Introducción}
+
+\hspace*{0.5cm}En este trabajo se nos plantea el ejercicio de analizar el funcionamiento de un algoritmo de animación usado en Hollywood donde
+los movimientos del actor serán generados por una captura de movimientos. La trayectoria del actor será determinadas por
+una serie de puntos que en nuestro trabajo seran los datos de entrada al algoritmo.
+
+Para lograr definir esa trayectoria tomaremos una escena bidimensional. A raiz de esto, estudiaremos el caso del movimiento del personaje en velocidad constante.
+
+Es por esto a través de splines, a quienes parametrizaremos por longitud de arco, mostraremos una cantidad de puntos que respresanta la posición del personaje en cada cuadro de escena.
+ 
+Comenzaremos el trabajo, definiendo una clase Spline en la que determinaremos como funciona el mismo para una variable. Una vez comprobado su correcto funcionamiento nos centralizaremos en la adaptación de lo creado relacionado al ejercicio pedido.
+
+En este caso utilizaremos un spline natural. Este tipo de spline suma a las condiciones de spline que tanto $S''$_0=$S''$_{n-1} = 0.
+
+Armaremos una curva definida en funcion de un parametro $t$. Esta curva será formada por un Spline definido en $x$ y otro en $y$. Parametrizaremos por longitud de arco, logrando que la longitud de la curva entre dos puntos cualquiera tenga la misma distancia, marcada por una variable $\Delta$.
+
+Cabe destacar que evaluaremos distintas estrategias para definir la parametrizacion como lo son la uniforme, la chord-length y la centripeta. 
+Para podes hacer este calculo utilizaremos el algoritmo de Simpson, que consideramos adecuado para poder resolver una integral e iremos calculando el resultado, interpolando y modificando el extremo $b$ hasta encontrar el adecuado para lograr una distancia igual, o muy aproximada, a $\Delta$.
+
+Finalmente reportaremos la serie de puntos recibida y la tangente de estos, que indicará la orientación que tendrá el personaje.

@@ -1,0 +1,14 @@
+\materia{M\'etodos Num\'ericos}
+\submateria{Trabajo Pr\'actico 2}
+\titulo{Resoluci\'on de Sistemas de Ecuaciones Lineales}
+\integrante{Aronson, Alex}{443/08}{alexaronson@gmail.com}
+\integrante{Nahabedian, Leandro }{250/08}{leanahabedian@hotmail.com}
+\integrante{Ravasi, Nicolás}{53/08}{nravasi@gmail.com}
+\maketitle
+
+\textbf{Resumen:}  En este trabajo analizaremos el funcionamiento de un horno, calculando la temperatura en cualquier punto dentro del mismo, y en particular la isoterma $400º$ C. Para esto realizamos un modelaje apropiado, reduciendo dicho problema a un sistema de ecuaciones lineales. Resolviendo el mismo y utilizando interpolación lineal, logramos hallar la isoterma. Además, incluimos en este informe, resultados comparativos que demuestran como es el comportamiento de nuestro algoritmo mediante gráficos.
+
+\\
+\\
+
+\textbf{Palabras clave: eliminacion gaussiana \ \ isoterma \ \ interpolación lineal \ \ sistema de ecuaciones lineales} 

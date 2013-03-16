@@ -1,0 +1,15 @@
+\section{Conclusión}
+
+A lo largo de este trabajo, hemos podido observar como se puede interpolar una serie de puntos a través de un spline, lo que nos otorga una curva que pasa por todos ellos pero a su vez cumple una serie de restricciones que lo hacen bastante deseable, como ser, que no fluctúe demasiado ya que los polinomios son de grado 3, y no solo eso, sino que es continua y derivable, lo cual lo hace una curva muy fácil de recorrer.
+
+Al interpolar el spline, nos topamos con que existen diversas formas de parametrizar el $t$ que se asigna a cada punto $(x,y)$, y observamos cómo éste influye en la curva que obtenemos luego. Para calcular el spline, tuvimos que recurrir a métodos ya empleados como Gauss, mostrando su ubicuidad en todo lo que se refiera a matrices. 
+
+Una vez obtenido el spline, se podría pensar que simplemente la parametrización era "perfecta" y que al hacer $S(\Delta)$ estaríamos recorriendo exactamente $\Delta$ sobre la curva, esto no tardó en demostrarse como falso, si bien en la parametrización chord-length esta aproximación es bastante buena y podría usarse en caso de que fuera imposible reparametrizar, en las otras parametrizaciones la aproximación es muy alejada de lo que debería dar y no proporciona velocidades constantes, y es más, en el caso de la uniforme, directamente no proporciona ninguna información nueva.
+
+Al reparametrizar, observamos que las tres parametrizaciones nos dan una forma de recorrer la curva a velocidad casi constante, la diferencia radica precisamente en que la curva generada por estas no es idéntica, por lo tanto, cada parametrización recorre una curva diferente.
+
+A su vez, pudimos observar cómo introducir un set de puntos donde las distancias entre sucesivos puntos cambien radicalmente causa enormes divergencias en la curva obtenidas luego de parametrizar uniformemente comparada con los otros tipos de parametrización.
+
+Finalmente, pudimos observar como recorrer la curva a mayor velocidad nos causa un error más grande al ser mayores los intervalos de integración, ya que los vectores tangentes, o sea, la velocidad, no eran constantes.
+
+

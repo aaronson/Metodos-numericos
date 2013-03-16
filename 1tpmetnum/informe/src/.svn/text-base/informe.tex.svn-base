@@ -1,0 +1,29 @@
+
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{dsfont}
+\usepackage{../packets/caratula}
+\usepackage{amsfonts}
+
+\hoffset=-2.5cm
+\textwidth=17cm
+\parskip=1ex
+\pagestyle{fancy}
+\addtolength{\headheight}{1pt}
+\lhead{Métodos Numéricos}
+\rhead{$1er$ cuatrimestre de $2011$}
+
+\begin{document}
+\input{caratula.tex}
+\newpage
+\tableofcontents
+\newpage
+\input{contenido.tex}
+\end{document}
+

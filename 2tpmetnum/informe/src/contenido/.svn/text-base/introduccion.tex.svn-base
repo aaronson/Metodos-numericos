@@ -1,0 +1,7 @@
+\section{Introducción}
+
+Cuando nos encontramos frente a un problema en que trabajamos con ecuaciones en derivadas parciales, nos enfrentamos a analizar al relación que tiene una función con varias variables independientes y la derivada de la misma.
+\\ \\ Generalmente se lidia con problemas de valor inicial, definidos por preguntas como cuáles son las variables dependientes que se propagan en el tiempo o cómo es la evolución de ellas, y también trabajamos con problema de valor de borde, definida con preguntas como cuáles son las variables, qué ecuaciones se satisfacen en el interior de una región de interes o qué ecuaciones se satisfacen por los puntos del borde de la región de interes.
+Como todas las condiciones de borde deben ser satisfechas simulateneamente, nos encontramos a la hora de resolver esto con un sistema de ecuaciones lineales, tema que hemos incorporado desde que comenzamos la materia.
+\\ \\Conociendo todo esto fuimos enfrentados al problema de estimar la isoterma 400º dentro de un horno de acero cilíndrico, al que le conocíamos que su borde externo es un círculo, mientras que su borden interno no tiene forma circular necesariamente.  
+\\ \\Conociendo los valores de su pared interna y contando con un termómetro de su pared externa para medir los valores (que varían entre 50 y 200), armaremos al igual que lo hacen las ecuaciones diferenciales un sistema de ecuaciones lineales, luego discretizando el sistema resolveremos computacionalmente el problema de la manera que contamos a lo largo de este trabajo.
